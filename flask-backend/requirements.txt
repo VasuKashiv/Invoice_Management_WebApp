@@ -8,8 +8,8 @@ google-auth==2.23.3
 python-dotenv==1.0.1
 
 # AI & Machine Learning
-tensorflow==2.10.0
-tensorflow-estimator==2.10.0
+tensorflow==2.15.0
+tensorflow-estimator==2.15.0
 tensorflow-io-gcs-filesystem==0.31.0
 scikit-learn==1.2.0
 scipy==1.10.0
