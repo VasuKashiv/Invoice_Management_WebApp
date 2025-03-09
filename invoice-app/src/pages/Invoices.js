@@ -20,10 +20,10 @@ const Invoices = () => {
     dispatch(updateInvoice(updatedInvoice)); // ✅ Update Redux & MongoDB
   };
 
-  const handleSave = () => {
-    dispatch(saveInvoice(editInvoice));
-    setEditInvoice(null);
-  };
+  // const handleSave = () => {
+  //   dispatch(saveInvoice(editInvoice));
+  //   setEditInvoice(null);
+  // };
 
   return (
     <div className="bg-white p-4 shadow-md rounded-xl">

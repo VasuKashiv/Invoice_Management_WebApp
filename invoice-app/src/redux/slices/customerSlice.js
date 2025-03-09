@@ -77,4 +77,3 @@ const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
-// export { saveCustomer };
