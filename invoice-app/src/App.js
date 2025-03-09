@@ -11,7 +11,7 @@ import Products from "./pages/Products";
 import Customers from "./pages/Customers";
 import FileUpload from "./components/FileUpload";
 import DataFetcher from "./components/DataFetcher"; // Import the new component
-
+import React from "react";
 function App() {
   console.log("✅ API BASE URL:", process.API_BASE_URL);
   return (
