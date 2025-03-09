@@ -5,8 +5,6 @@ import { fetchInvoices, updateInvoice } from "../redux/slices/invoiceSlice";
 const Invoices = () => {
   const dispatch = useDispatch();
   const invoices = useSelector((state) => state.invoices) || [];
-
-  const API_BASE_URL = process.env.API_BASE_URL;
   console.log("✅ API BASE URL:", process.env.API_BASE_URL);
   useEffect(() => {
     dispatch(fetchInvoices());
