@@ -5,7 +5,7 @@ import { fetchInvoices, updateInvoice } from "../redux/slices/invoiceSlice";
 const Invoices = () => {
   const dispatch = useDispatch();
   const invoices = useSelector((state) => state.invoices) || [];
-  console.log("✅ API BASE URL:", process.env.API_BASE_URL);
+  console.log("✅ API BASE URL:", process.env.REACT_APP_API_BASE_URL);
   useEffect(() => {
     dispatch(fetchInvoices());
   }, [dispatch]);
@@ -18,7 +18,6 @@ const Invoices = () => {
   return (
     <div className="bg-white p-4 shadow-md rounded-xl">
       <h2 className="text-xl font-bold mb-4">Invoices</h2>
-      <p>API Base URL: {process.env.API_BASE_URL}</p>
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">

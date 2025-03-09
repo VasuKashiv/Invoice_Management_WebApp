@@ -1,7 +1,7 @@
 import { fetchProducts } from "./productSlice";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchInvoices } from "./invoiceSlice";
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 // Fetch all customers
 export const fetchCustomers = createAsyncThunk(
   "customers/fetchCustomers",
