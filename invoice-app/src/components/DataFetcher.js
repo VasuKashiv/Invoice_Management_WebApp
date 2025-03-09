@@ -8,7 +8,7 @@ const DataFetcher = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/status")
+    fetch(`${API_BASE_URL}/api/status`)
       .then((res) => res.json())
       .then((data) => console.log("Backend Status:", data))
       .catch((err) => console.error("Error connecting to backend:", err));
