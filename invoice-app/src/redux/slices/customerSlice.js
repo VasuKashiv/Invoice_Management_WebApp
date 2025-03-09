@@ -1,11 +1,12 @@
 import { fetchProducts } from "./productSlice";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchInvoices } from "./invoiceSlice";
+const API_BASE_URL = process.env.API_BASE_URL;
 // Fetch all customers
 export const fetchCustomers = createAsyncThunk(
   "customers/fetchCustomers",
   async () => {
-    const response = await fetch("http://localhost:5000/api/customers");
+    const response = await fetch(`${API_BASE_URL}/api/customers`);
     return response.json();
   }
 );
@@ -14,7 +15,7 @@ export const saveCustomer = createAsyncThunk(
   "customers/saveCustomer",
   async (customer, { dispatch }) => {
     const response = await fetch(
-      `http://localhost:5000/api/customers/${customer.id}`,
+      `${API_BASE_URL}/api/customers/${customer.id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -34,7 +35,7 @@ export const updateCustomer = createAsyncThunk(
   "customers/updateCustomer",
   async (customer) => {
     const response = await fetch(
-      `http://localhost:5000/api/customers/${customer.customer_id}`,
+      `${API_BASE_URL}/api/customers/${customer.customer_id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

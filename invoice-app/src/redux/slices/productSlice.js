@@ -1,48 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchInvoices } from "./invoiceSlice";
 import { fetchCustomers } from "./customerSlice";
-
+const API_BASE_URL = process.env.API_BASE_URL;
 // Fetch all products
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await fetch("http://localhost:5000/api/products");
+    const response = await fetch(`${API_BASE_URL}/api/products`);
     return response.json();
   }
 );
 
-// Save a product and refresh all data
-// export const saveProduct = createAsyncThunk(
-//   "products/saveProduct",
-//   async (product, { dispatch }) => {
-//     const response = await fetch(
-//       `http://localhost:5000/api/products/${product.id}`,
-//       {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(product),
-//       }
-//     );
-
-//     if (response.ok) {
-//       dispatch(fetchInvoices()); // ✅ Refresh invoices
-//       dispatch(fetchProducts()); // ✅ Refresh products
-//       dispatch(fetchCustomers()); // ✅ Refresh customers
-//     }
-//     return response.json();
-//   }
-// );
 export const saveProduct = createAsyncThunk(
   "products/saveProduct",
   async (product, { dispatch }) => {
-    const response = await fetch(
-      `http://localhost:5000/api/products/${product.id}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/products/${product.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(product),
+    });
 
     if (response.ok) {
       dispatch(fetchInvoices());
@@ -57,7 +33,7 @@ export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async (product) => {
     const response = await fetch(
-      `http://localhost:5000/api/products/${product.product_id}`,
+      `${API_BASE_URL}/api/products/${product.product_id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

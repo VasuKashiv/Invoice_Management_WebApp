@@ -41,37 +41,6 @@ const Invoices = () => {
             {/* <th className="border p-2">Actions</th> */}
           </tr>
         </thead>
-        {/* <tbody>
-          {invoices.map((invoice, index) =>
-            invoice.products?.map((product, pIndex) => (
-              <tr key={`${index}-${pIndex}`} className="text-center">
-                {pIndex === 0 && (
-                  <td className="border p-2" rowSpan={invoice.products.length}>
-                    {index + 1}
-                  </td>
-                )}
-                {pIndex === 0 && (
-                  <td className="border p-2" rowSpan={invoice.products.length}>
-                    {invoice.customer?.customer_name || "---"}
-                  </td>
-                )}
-                <td className="border p-2">{product.product_name}</td>
-                <td className="border p-2">{product.quantity}</td>
-                <td className="border p-2">{product.tax || "0"}%</td>
-                {pIndex === 0 && (
-                  <td className="border p-2" rowSpan={invoice.products.length}>
-                    ${parseFloat(invoice.total_amount || 0).toFixed(2)}
-                  </td>
-                )}
-                {pIndex === 0 && (
-                  <td className="border p-2" rowSpan={invoice.products.length}>
-                    {invoice.date || "---"}
-                  </td>
-                )}
-              </tr>
-            ))
-          )}
-        </tbody> */}
         <tbody>
           {invoices.map((invoice, index) =>
             invoice.products?.map((product, pIndex) => (

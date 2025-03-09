@@ -141,7 +141,6 @@ def extract_invoice_data(file_path, file_extension):
         try:
             raw_text =  response.candidates[0].content.parts[0].text # ✅ Extract text
 
-            # ✅ Remove Markdown formatting (```json ... ```)
             json_text = re.sub(r"```json\n|\n```", "", raw_text).strip()
             extracted_data = json.loads(json_text)  # ✅ Parse JSON
             print(extracted_data)
@@ -177,158 +176,7 @@ def extract_invoice_data(file_path, file_extension):
     except Exception as e:
         print("❌ Error in AI extraction:", str(e))
         return {"error": str(e)}
-
-# @app.route("/api/upload", methods=["POST"])
-# def upload_file():
-#     if "file" not in request.files:
-#             return jsonify({"error": "No file uploaded"}), 400
-
-#     file = request.files["file"]
-#     if file.filename == "":
-#         return jsonify({"error": "No selected file"}), 400
-
-#     filename = secure_filename(file.filename)
-#     file_extension = filename.rsplit(".", 1)[1].lower()
-
-#     if file_extension not in ALLOWED_EXTENSIONS:
-#         return jsonify({"error": "Unsupported file type"}), 400
-
-#     file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-#     file.save(file_path)
-
-
-#     # extracted_data = extract_invoice_data(file_path, file_extension)
-#     # extracted_data=extracted_data["invoices"]
-#     # # if extracted_data:
-#     # #     invoice_id = extracted_data["invoices"]
-
-#     # #     # ✅ Insert invoice and get its ID
-#     # #     invoices_collection.insert_one(extracted_data)
-
-#     # #     # ✅ Link Products to Invoice
-#     # #     for product in extracted_data.get("products", []):
-#     # #         product["invoice_id"] = invoice_id
-#     # #         products_collection.insert_one(product)
-
-#     # #     # ✅ Link Customer to Invoice
-#     # #     customer_data = extracted_data.get("customer", {})
-#     # #     if customer_data:
-#     # #         customers_collection.update_one(
-#     # #             {"customer_id": customer_data["customer_id"]},
-#     # #             {"$addToSet": {"invoice_ids": invoice_id}},
-#     # #             upsert=True
-#     # #         )
-#     # if extracted_data:
-#     #     invoice_id = extracted_data["invoice_number"]
-#     #     customer_id = extracted_data["customer"].get("customer_id", None)
-#     #     product_ids = []
-
-#     #     # ✅ Insert Invoice with References Only
-#     #     invoice_data = {
-#     #         "invoice_number": invoice_id,
-#     #         "customer_id": customer_id,
-#     #         "product_ids": [],
-#     #         "total_amount": extracted_data.get("total_amount", 0),
-#     #         "date": extracted_data.get("date", "")
-#     #     }
-#     #     invoices_collection.insert_one(invoice_data)
-
-#     #     # ✅ Insert & Link Products
-#     #     for product in extracted_data.get("products", []):
-#     #         product_id = product.get("product_id", None)
-
-#     #         if product_id:
-#     #             product["invoice_id"] = invoice_id  # Link to Invoice
-#     #             product_ids.append(product_id)
-
-#     #             # ✅ Upsert Product (Prevent Duplicates)
-#     #             products_collection.update_one(
-#     #                 {"product_id": product_id},
-#     #                 {"$set": product},
-#     #                 upsert=True
-#     #             )
-
-#     #     # ✅ Update Invoice with Product IDs
-#     #     invoices_collection.update_one(
-#     #         {"invoice_number": invoice_id},
-#     #         {"$set": {"product_ids": product_ids}}
-#     #     )
-
-#     #     # ✅ Insert or Update Customer with Linked Invoices
-#     #     if customer_id:
-#     #         customers_collection.update_one(
-#     #             {"customer_id": customer_id},
-#     #             {"$addToSet": {"invoice_ids": invoice_id}},
-#     #             upsert=True
-#     #         )
-
-#     #     # return jsonify({"message": "File processed successfully!", "data": extracted_data}), 200
-#     #     return jsonify({"message": "File processed successfully!", "data": extracted_data}), 200
-#     extracted_data = extract_invoice_data(file_path, file_extension)
-
-#     if extracted_data:
-#         if "error" in extracted_data:
-#             print("❌ AI Extraction Error:", extracted_data["error"])
-#             return jsonify({"error": extracted_data["error"]}), 500
-
-#         invoice_id = extracted_data["invoices"][0]["invoice_number"]  # ✅ Get invoice number
-#         product_ids = []
-#         customer_id = None
-
-#         # ✅ Insert Invoice (Only if not already present)
-#         existing_invoice = invoices_collection.find_one({"invoice_number": invoice_id})
-#         if not existing_invoice:
-#             invoices_collection.insert_one({
-#                 "invoice_number": invoice_id,
-#                 "customer_id": None,  # ✅ Placeholder
-#                 "product_ids": [],
-#                 "total_amount": extracted_data["invoices"][0].get("total_amount", 0),
-#                 "date": extracted_data["invoices"][0].get("date", "")
-#             })
-
-#         # ✅ Insert or Update Customer
-#         if "customers" in extracted_data and extracted_data["customers"]:
-#             customer_data = extracted_data["customers"][0]
-#             customer_id = f"CUST-{customer_data['customer_name'].replace(' ', '_')}"  # ✅ Generate unique ID
-
-#             customers_collection.update_one(
-#                 {"customer_id": customer_id},
-#                 {"$set": {**customer_data, "customer_id": customer_id}, "$addToSet": {"invoice_ids": invoice_id}},
-#                 upsert=True
-#             )
-
-#             # ✅ Update Invoice to link the Customer
-#             invoices_collection.update_one(
-#                 {"invoice_number": invoice_id},
-#                 {"$set": {"customer_id": customer_id}}
-#             )
-
-#         # ✅ Insert or Update Products
-#         if "products" in extracted_data and extracted_data["products"]:
-#             for product in extracted_data["products"]:
-#                 product_id = f"PROD-{product['product_name'].replace(' ', '_')}"  # ✅ Generate unique ID
-
-#                 products_collection.update_one(
-#                     {"product_id": product_id},
-#                     {"$set": {**product, "product_id": product_id, "invoice_id": invoice_id}},
-#                     upsert=True
-#                 )
-
-#                 product_ids.append(product_id)
-
-#         # ✅ Update Invoice with Linked Products
-#         invoices_collection.update_one(
-#             {"invoice_number": invoice_id},
-#             {"$set": {"product_ids": product_ids}}
-#         )
-
-#         return jsonify({"message": "File processed successfully!", "data": extracted_data}), 200
-#     # else:
-#     #     return jsonify({"error": "Failed to extract data"}), 500
-
-#     else:
-#         return jsonify({"error": "Failed to extract data"}), 500
-
+    
 # ✅ Upload and Extract Invoice Data
 @app.route("/api/upload", methods=["POST"])
 def upload_file():
@@ -396,25 +244,6 @@ def upload_file():
 def status():
     return jsonify({"status": "Backend is running"}), 200
 
-# @app.route("/api/invoices", methods=["GET"])
-# def get_invoices():
-#     invoices = list(invoices_collection.find({}))
-#     updated_invoices = []
-
-#     for invoice in invoices:
-#         # ✅ Fetch latest customer details
-#         customer = customers_collection.find_one({"customer_id": invoice.get("customer_id")}, {"_id": 0})
-        
-#         # ✅ Fetch latest product details
-#         products = list(products_collection.find({"product_id": {"$in": invoice.get("product_ids", [])}}, {"_id": 0}))
-
-#         # ✅ Merge updated data
-#         invoice["customer"] = customer
-#         invoice["products"] = products
-#         updated_invoices.append(invoice)
-
-#     return jsonify(updated_invoices), 200
-
 @app.route("/api/invoices", methods=["GET"])
 def get_invoices():
     invoices = list(invoices_collection.find({}))
@@ -429,74 +258,6 @@ def get_invoices():
         updated_invoices.append(invoice)
 
     return jsonify(updated_invoices), 200
-
-# @app.route("/api/invoices", methods=["GET"])
-# def get_invoices():
-#     invoices = list(invoices_collection.find({}))
-#     updated_invoices = []
-
-#     for invoice in invoices:
-#         customer = customers_collection.find_one({"customer_id": invoice.get("customer_id")}, {"_id": 0})
-#         products = list(products_collection.find({"invoice_id": invoice.get("invoice_number")}, {"_id": 0}))
-
-#         invoice["customer"] = customer
-#         invoice["products"] = products
-#         updated_invoices.append(invoice)
-
-#     return jsonify(updated_invoices), 200
-
-# @app.route("/api/invoices/<invoice_id>", methods=["PUT"])
-# def update_invoice(invoice_id):
-#     try:
-#         data = request.json
-#         invoices_collection.update_one({"_id": invoice_id}, {"$set": data})
-
-#         # ✅ Sync related customer and products
-#         if "customer" in data:
-#             customers_collection.update_one({"invoice_id": invoice_id}, {"$set": data["customer"]})
-#         if "products" in data:
-#             for product in data["products"]:
-#                 products_collection.update_one({"_id": product["_id"]}, {"$set": product})
-
-#         # ✅ Fetch updated data
-#         updated_invoice = invoices_collection.find_one({"_id": invoice_id})
-#         updated_invoice["_id"] = str(updated_invoice["_id"])
-#         updated_invoice["customer"] = customers_collection.find_one({"_id": updated_invoice["customer_id"]}, {"_id": 0})
-#         updated_invoice["products"] = list(products_collection.find({"_id": {"$in": updated_invoice["product_ids"]}}, {"_id": 0}))
-
-#         return jsonify(updated_invoice), 200
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-
-# @app.route("/api/invoices/<invoice_id>", methods=["PUT"])
-# def update_invoice(invoice_id):
-#     try:
-#         data = request.json
-#         result = invoices_collection.update_one({"invoice_number": invoice_id}, {"$set": data})
-
-#         if result.matched_count == 0:
-#             return jsonify({"error": "Invoice not found"}), 404
-
-#         # ✅ Update customer details in all invoices referencing this customer
-#         if "customer_id" in data:
-#             customer = customers_collection.find_one({"customer_id": data["customer_id"]}, {"_id": 0})
-#             invoices_collection.update_many(
-#                 {"customer_id": data["customer_id"]},
-#                 {"$set": {"customer": customer}}
-#             )
-
-#         # ✅ Update product details in all invoices referencing these products
-#         if "product_ids" in data:
-#             products = list(products_collection.find({"product_id": {"$in": data["product_ids"]}}, {"_id": 0}))
-#             invoices_collection.update_many(
-#                 {"product_ids": {"$in": data["product_ids"]}},
-#                 {"$set": {"products": products}}
-#             )
-
-#         return jsonify({"message": "Invoice updated successfully"}), 200
-
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
 
 @app.route("/api/invoices/<invoice_id>", methods=["PUT"])
 def update_invoice(invoice_id):
@@ -537,58 +298,17 @@ def update_invoice(invoice_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# @app.route("/api/invoices/<invoice_id>", methods=["PUT"])
-# def update_invoice(invoice_id):
-#     data = request.json
-#     result = invoices_collection.update_one({"invoice_number": invoice_id}, {"$set": data})
-
-#     if result.matched_count == 0:
-#         return jsonify({"error": "Invoice not found"}), 404
-
-#     # ✅ Update linked products
-#     products_collection.update_many(
-#         {"invoice_id": invoice_id},
-#         {"$set": {"total_amount": data["total_amount"]}}
-#     )
-
-#     # ✅ Update linked customers
-#     customers_collection.update_many(
-#         {"invoice_ids": invoice_id},
-#         {"$set": {"total_purchase": data["total_amount"]}}
-#     )
-
-#     return jsonify({"message": "Invoice updated successfully"}), 200
-
-
 @app.route("/api/products", methods=["GET"])
 def get_products():
     try:
         products = list(products_collection.find({}))
         for product in products:
-            product["_id"] = str(product["_id"])  # Convert ObjectId to string
+            product["_id"] = str(product["_id"]) 
             product["invoice"] = invoices_collection.find_one({"_id": product["invoice_id"]}, {"_id": 0})
 
         return jsonify(products), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# @app.route("/api/products/<product_id>", methods=["PUT"])
-# def update_product(product_id):
-#     data = request.json
-#     result = products_collection.update_one({"product_id": product_id}, {"$set": data})
-
-#     if result.matched_count == 0:
-#         return jsonify({"error": "Product not found"}), 404
-
-#     # ✅ Update all invoices referencing this product
-#     invoices_collection.update_many(
-#         {"product_ids": product_id},
-#         {"$set": {"products.$[elem]": data}},
-#         array_filters=[{"elem.product_id": product_id}]
-#     )
-
-#     return jsonify({"message": "Product updated successfully"}), 200
 
 @app.route("/api/products/<product_id>", methods=["PUT"])
 def update_product(product_id):
@@ -598,14 +318,11 @@ def update_product(product_id):
     if result.matched_count == 0:
         return jsonify({"error": "Product not found"}), 404
 
-    # ✅ Update all invoices referencing this product
     invoices_collection.update_many(
         {"product_ids": product_id},
         {"$set": {"products.$[elem]": data}},
         array_filters=[{"elem.product_id": product_id}]
     )
-
-    # ✅ Update total purchase amount for customers who bought this product
     customers_collection.update_many(
         {"customer_id": {"$in": [inv["customer_id"] for inv in invoices_collection.find({"product_ids": product_id})]}},
         {"$inc": {"total_purchase": data.get("unit_price", 0) * data.get("quantity", 1)}}
@@ -626,22 +343,6 @@ def get_customers():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-# @app.route("/api/customers/<customer_id>", methods=["PUT"])
-# def update_customer(customer_id):
-#     data = request.json
-#     result = customers_collection.update_one({"customer_id": customer_id}, {"$set": data})
-
-#     if result.matched_count == 0:
-#         return jsonify({"error": "Customer not found"}), 404
-
-#     # ✅ Update all invoices referencing this customer
-#     invoices_collection.update_many(
-#         {"customer_id": customer_id},
-#         {"$set": {"customer": data}}
-#     )
-
-#     return jsonify({"message": "Customer updated successfully"}), 200
 @app.route("/api/customers/<customer_id>", methods=["PUT"])
 def update_customer(customer_id):
     data = request.json
@@ -650,7 +351,6 @@ def update_customer(customer_id):
     if result.matched_count == 0:
         return jsonify({"error": "Customer not found"}), 404
 
-    # ✅ Update all invoices referencing this customer
     invoices_collection.update_many(
         {"customer_id": customer_id},
         {"$set": {"customer": data}}
