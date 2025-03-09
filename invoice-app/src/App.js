@@ -13,6 +13,7 @@ import FileUpload from "./components/FileUpload";
 import DataFetcher from "./components/DataFetcher"; // Import the new component
 
 function App() {
+  console.log("✅ API BASE URL:", process.API_BASE_URL);
   return (
     <Provider store={store}>
       <Router>
