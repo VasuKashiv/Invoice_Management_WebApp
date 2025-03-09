@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { fetchCustomers, updateCustomer } from "../redux/slices/customerSlice";
 
 const Customers = () => {
