@@ -5,12 +5,13 @@ import google.generativeai as genai
 import os
 import json
 from werkzeug.utils import secure_filename
-from config import GEMINI_API_KEY, MONGO_URI
 import PyPDF2
 import base64
 import pandas as pd
 import re
 
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+MONGO_URI = os.getenv("MONGO_URI")
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # Fix CORS for all routes
