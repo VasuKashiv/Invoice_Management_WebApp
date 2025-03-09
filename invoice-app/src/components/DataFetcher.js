@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { fetchInvoices } from "../redux/slices/invoiceSlice";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { fetchCustomers } from "../redux/slices/customerSlice";
-
+const API_BASE_URL = process.env.API_BASE_URL;
 const DataFetcher = () => {
   const dispatch = useDispatch();
 
