@@ -1,15 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import {
-  fetchInvoices,
-  saveInvoice,
-  updateInvoice,
-} from "../redux/slices/invoiceSlice";
+import { useEffect } from "react";
+import { fetchInvoices, updateInvoice } from "../redux/slices/invoiceSlice";
 
 const Invoices = () => {
   const dispatch = useDispatch();
   const invoices = useSelector((state) => state.invoices) || [];
-  const [editInvoice, setEditInvoice] = useState(null);
 
   useEffect(() => {
     dispatch(fetchInvoices());
@@ -19,11 +14,6 @@ const Invoices = () => {
     const updatedInvoice = { ...invoice, [field]: value };
     dispatch(updateInvoice(updatedInvoice)); // ✅ Update Redux & MongoDB
   };
-
-  // const handleSave = () => {
-  //   dispatch(saveInvoice(editInvoice));
-  //   setEditInvoice(null);
-  // };
 
   return (
     <div className="bg-white p-4 shadow-md rounded-xl">
@@ -38,7 +28,6 @@ const Invoices = () => {
             <th className="border p-2">Tax (%)</th>
             <th className="border p-2">Total Amount</th>
             <th className="border p-2">Date</th>
-            {/* <th className="border p-2">Actions</th> */}
           </tr>
         </thead>
         <tbody>
